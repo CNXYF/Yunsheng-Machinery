@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- 字符编码设置：支持中文 -->
+  <meta charset="UTF-8" />
+  <!-- 响应式视口设置：保证移动端正常显示 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- SEO 基础标签：后续可替换为贵公司真实信息 -->
+  <title>智享科技 - 让科技融入生活 | 智能手表 / 无线耳机 / 便携充电宝</title>
+  <meta name="description" content="智享科技专注于为消费者提供高品质、高性价比的智能电子产品，包括智能手表 X1、无线耳机 Pro、便携充电宝 Mini 等系列产品。" />
+  <meta name="keywords" content="智能手表,无线耳机,充电宝,智享科技,智能硬件" />
+  <!-- 网站图标（Favicon）：后续替换为真实 Logo -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%A1%3C/text%3E%3C/svg%3E" />
+
+  <!-- 引入全局样式文件 -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 导航栏占位：由 common.js 动态渲染（包含品牌 + 导航菜单 + 产品下拉菜单） -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- 主要内容区 -->
+  <main>
+    <!-- =============================================================
+         区块 1：品牌展示 Hero 区
+         ============================================================= -->
+    <section class="hero">
+      <div class="hero-inner">
+        <!-- 左侧：标题 + 介绍 + 按钮 -->
+        <div>
+          <h1>
+            用<span class="hl-blue">智能科技</span><br />
+            点亮<span class="hl-orange">品质生活</span>
+          </h1>
+          <p>
+            智享科技专注打造便捷、可靠、令人心动的智能硬件产品。
+            从可穿戴设备到随身配件，每一件产品都只为让你的生活更简单、更美好。
+          </p>
+          <div class="hero-btns">
+            <!-- 浏览全部产品 -->
+            <a href="products.html" class="btn btn-primary">浏览全部产品</a>
+            <!-- 了解公司 -->
+            <a href="about.html" class="btn btn-outline">了解我们</a>
+          </div>
+        </div>
+        <!-- 右侧：品牌大图（后续可替换为公司主视觉图） -->
+        <div class="hero-image">
+          <img
+            src="https://placehold.co/800x560?text=Smart+Living+%C2%B7+Brand+Hero"
+            alt="智享科技品牌图"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         区块 2：精选产品卡片（从 products-data.js 读取 featured=true 的产品）
+         ============================================================= -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">精选产品</h2>
+        <p class="section-subtitle">我们为你挑选了最受欢迎的明星产品</p>
+
+        <!-- 产品卡片容器：以下内容由页面底部 JS 动态渲染 -->
+        <div id="featuredProductsGrid" class="products-grid"></div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         区块 3：宣传视频 / 图片 区域
+         ============================================================= -->
+    <section class="section promo-section">
+      <div class="container">
+        <h2 class="section-title">了解产品更多</h2>
+        <p class="section-subtitle">通过视频和图片，感受产品的设计与品质</p>
+
+        <div class="promo-grid">
+          <!-- 左侧：宣传视频卡片 -->
+          <div class="promo-card">
+            <!-- 使用原生 HTML5 video 标签，用户可直接点击播放 -->
+            <video
+              src="https://www.w3schools.com/html/mov_bbb.mp4"
+              controls
+              preload="metadata"
+              poster="https://placehold.co/800x450?text=Brand+Video+Poster"
+            ></video>
+            <div class="promo-card-body">
+              <h3>品牌宣传视频</h3>
+              <p>一分钟了解智享科技，看我们如何用产品改变生活日常。</p>
+            </div>
+          </div>
+
+          <!-- 右侧：宣传图片卡片 -->
+          <div class="promo-card">
+            <img
+              src="https://placehold.co/800x450?text=Lifestyle+%7C+Product+In+Use"
+              alt="产品使用场景"
+            />
+            <div class="promo-card-body">
+              <h3>真实使用场景</h3>
+              <p>无论是工作通勤、运动健身还是居家休闲，我们的产品都能成为你的贴心伙伴。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================================
+         区块 4：简短公司介绍（图片 + 文字 + 跳转按钮）
+         ============================================================= -->
+    <section class="section">
+      <div class="container">
+        <div class="about-preview">
+          <!-- 左侧文字介绍 -->
+          <div>
+            <h2>关于智享科技</h2>
+            <p>
+              智享科技成立于 2018 年，是一家专注于智能消费电子领域的创新型公司。
+              我们坚信，好的科技产品应当好用、耐用、人人用得起。
+            </p>
+            <p>
+              公司拥有完整的研发、生产与售后团队，从用户需求出发，
+              通过严苛的品控流程，让每一件产品都经得起市场与时间的考验。
+            </p>
+            <a href="about.html" class="btn btn-outline">了解更多 →</a>
+          </div>
+          <!-- 右侧：公司图片（办公室/团队/工厂 等占位图） -->
+          <div>
+            <img
+              src="https://placehold.co/800x560?text=Our+Company+%7C+Team+%26+Office"
+              alt="公司简介"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚占位：由 common.js 动态渲染 -->
+  <div id="footer-placeholder"></div>
+
+  <!-- 引入产品数据（首页精选产品区需要） -->
+  <script src="products-data.js"></script>
+  <!-- 引入公共 JS（导航栏、页脚、渲染卡片函数） -->
+  <script src="common.js"></script>
+
+  <!-- 首页专属 JS：渲染"精选产品"卡片 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // 找到卡片容器
+      const grid = document.getElementById("featuredProductsGrid");
+      if (!grid) return;
+
+      // 获取精选产品列表
+      const featuredList = getFeaturedProducts();
+
+      // 如果没有精选产品，则使用全部产品
+      const list = featuredList.length > 0 ? featuredList : (products || []);
+
+      // 逐产品渲染卡片（使用 common.js 提供的公共函数）
+      list.forEach(function (product) {
+        grid.innerHTML += renderProductCard(product);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+# ============================================
+# .gitignore — 本项目是纯静态 HTML/CSS/JS 网站
+# 忽略常见的系统、编辑器、临时文件
+# ============================================
+
+# --- 操作系统 ---
+Thumbs.db          # Windows 缩略图缓存
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# --- 编辑器 / IDE ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# --- 日志 / 临时文件 ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- 本地预览 / 临时补丁 ---
+*.tmp
+*.bak
+*.patch

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- 字符编码 -->
+  <meta charset="UTF-8" />
+  <!-- 响应式视口 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- SEO -->
+  <title>联系我们 - 智享科技</title>
+  <meta name="description" content="联系智享科技：通过表单留言、电话、邮箱或到公司总部洽谈合作与咨询。" />
+  <!-- 网站图标 -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%A1%3C/text%3E%3C/svg%3E" />
+
+  <!-- 全局样式 -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 导航栏占位：由 common.js 动态渲染 -->
+  <div id="navbar-placeholder"></div>
+
+  <main>
+    <!-- =============================================================
+         页面顶部横幅
+         ============================================================= -->
+    <header class="page-header">
+      <div class="container">
+        <h1>联系我们</h1>
+        <p>期待你的留言与来电，我们将在第一时间回复</p>
+      </div>
+    </header>
+
+    <!-- =============================================================
+         联系主体：左侧表单 + 右侧信息卡片 & 地图
+         ============================================================= -->
+    <section class="section">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- ========== 左侧：联系表单 ========== -->
+          <div class="contact-form">
+            <h2>给我们留言</h2>
+
+            <!-- 提交成功提示（默认隐藏，提交后显示） -->
+            <div class="form-success" id="formSuccess">
+              ✓ 留言提交成功！我们会在 1 个工作日内与你联系。
+            </div>
+
+            <!-- 表单：使用 id 便于 JS 获取字段值；无后端情况下在前端模拟提交 -->
+            <form id="contactForm" novalidate>
+              <!-- 姓名 -->
+              <div class="form-group">
+                <label for="name">姓名 <span style="color:#EF4444;">*</span></label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="请输入您的姓名"
+                  required
+                />
+              </div>
+
+              <!-- 邮箱 -->
+              <div class="form-group">
+                <label for="email">邮箱 <span style="color:#EF4444;">*</span></label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="例如：you@example.com"
+                  required
+                />
+              </div>
+
+              <!-- 电话（选填） -->
+              <div class="form-group">
+                <label for="phone">电话</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="选填，方便我们电话联系您"
+                />
+              </div>
+
+              <!-- 留言 -->
+              <div class="form-group">
+                <label for="message">留言内容 <span style="color:#EF4444;">*</span></label>
+                <textarea
+                  id="message"
+                  name="message"
+                  placeholder="请简要描述您的需求或问题..."
+                  required
+                ></textarea>
+              </div>
+
+              <!-- 提交按钮 -->
+              <button type="submit" class="btn btn-primary" style="width:100%;">
+                提交留言
+              </button>
+            </form>
+          </div>
+
+          <!-- ========== 右侧：联系信息 + 地图 ========== -->
+          <div class="contact-info">
+            <!-- 信息卡片 1：联系方式 -->
+            <div class="info-card">
+              <h3>联系方式</h3>
+              <div class="info-item">
+                <span class="label">地址：</span>
+                <span>北京市朝阳区建国路 88 号智享大厦 18 层</span>
+              </div>
+              <div class="info-item">
+                <span class="label">电话：</span>
+                <span>400-888-8888（全国统一客服）</span>
+              </div>
+              <div class="info-item">
+                <span class="label">邮箱：</span>
+                <span>contact@zhixiang-tech.com</span>
+              </div>
+              <div class="info-item">
+                <span class="label">工作时间：</span>
+                <span>周一至周日  9:00 - 21:00</span>
+              </div>
+            </div>
+
+            <!-- 信息卡片 2：商务合作 -->
+            <div class="info-card">
+              <h3>商务合作</h3>
+              <div class="info-item">
+                <span class="label">渠道：</span>
+                <span>bd@zhixiang-tech.com</span>
+              </div>
+              <div class="info-item">
+                <span class="label">媒体：</span>
+                <span>pr@zhixiang-tech.com</span>
+              </div>
+            </div>
+
+            <!-- 信息卡片 3：地图占位（后续接入真实地图 API 可替换此区域） -->
+            <div class="info-card" style="padding: 0; overflow: hidden;">
+              <div class="map-placeholder">
+                <div class="big">🗺️</div>
+                <div>北京市朝阳区建国路 88 号</div>
+                <div style="margin-top:6px; font-size:13px; color:#60A5FA;">
+                  （此处为地图占位区域，后续可接入高德 / 百度 / 谷歌地图）
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚占位：由 common.js 动态渲染 -->
+  <div id="footer-placeholder"></div>
+
+  <!-- 产品数据（页脚产品列表需要） -->
+  <script src="products-data.js"></script>
+  <!-- 公共 JS：渲染导航栏、页脚 -->
+  <script src="common.js"></script>
+
+  <!-- 本页专属 JS：联系表单校验 + 模拟提交 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("contactForm");
+      const successBox = document.getElementById("formSuccess");
+
+      /**
+       * 邮箱格式校验（简单正则）
+       */
+      function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      // 监听表单提交事件
+      form.addEventListener("submit", function (e) {
+        // 阻止默认的表单提交（纯前端演示：不刷新页面、不真正发送）
+        e.preventDefault();
+
+        // 获取表单字段值并去除首尾空格
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const message = document.getElementById("message").value.trim();
+
+        // ---------- 基础校验 ----------
+        if (!name) {
+          alert("请填写您的姓名");
+          document.getElementById("name").focus();
+          return;
+        }
+        if (!email) {
+          alert("请填写邮箱地址");
+          document.getElementById("email").focus();
+          return;
+        }
+        if (!isValidEmail(email)) {
+          alert("邮箱格式不正确，请检查后重新输入");
+          document.getElementById("email").focus();
+          return;
+        }
+        if (!message) {
+          alert("请填写留言内容");
+          document.getElementById("message").focus();
+          return;
+        }
+
+        // ---------- 模拟提交（真正上线时替换为真实接口调用） ----------
+        // 此处使用控制台打印提交数据，方便联调与调试
+        console.log("【联系表单】提交数据：", {
+          name: name,
+          email: email,
+          phone: phone,
+          message: message
+        });
+
+        // 显示"成功提示"
+        successBox.style.display = "block";
+
+        // 清空表单（可按需保留姓名等字段）
+        form.reset();
+
+        // 5 秒后自动隐藏成功提示
+        setTimeout(function () {
+          successBox.style.display = "none";
+        }, 5000);
+      });
+    });
+  </script>
+</body>
+</html>

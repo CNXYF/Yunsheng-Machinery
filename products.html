@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- 字符编码 -->
+  <meta charset="UTF-8" />
+  <!-- 响应式视口 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- SEO -->
+  <title>产品介绍 - 智享科技</title>
+  <meta name="description" content="浏览智享科技全部产品线，包括智能手表 X1、无线耳机 Pro、便携充电宝 Mini 等热门产品。" />
+  <!-- 网站图标 -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%A1%3C/text%3E%3C/svg%3E" />
+
+  <!-- 全局样式 -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 导航栏占位：由 common.js 动态渲染 -->
+  <div id="navbar-placeholder"></div>
+
+  <main>
+    <!-- =============================================================
+         页面顶部横幅
+         ============================================================= -->
+    <header class="page-header">
+      <div class="container">
+        <h1>全部产品</h1>
+        <p>精心打造的智能硬件产品，总有一款适合你</p>
+      </div>
+    </header>
+
+    <!-- =============================================================
+         产品总览区（工具栏 + 卡片网格）
+         ============================================================= -->
+    <section class="section">
+      <div class="container">
+        <!-- 工具栏：左侧显示产品数量，右侧提供搜索框 -->
+        <div class="products-toolbar">
+          <!-- 产品数量提示（由 JS 动态填充数字） -->
+          <div class="products-count">
+            共找到 <strong id="productCount">0</strong> 款产品
+          </div>
+          <!-- 关键词搜索框（按产品名称 + 描述过滤，纯前端实现） -->
+          <input
+            type="text"
+            id="productSearch"
+            class="search-box"
+            placeholder="搜索产品名称或关键词..."
+          />
+        </div>
+
+        <!-- 产品卡片网格容器：内容由本页 JS 根据 products 数组动态渲染 -->
+        <div id="allProductsGrid" class="products-grid"></div>
+
+        <!-- 无结果提示（搜索无匹配时显示） -->
+        <div id="noResultTip" style="display:none; text-align:center; padding:60px 20px; color:#6B7280;">
+          <p style="font-size: 18px; margin-bottom: 10px;">未找到匹配的产品</p>
+          <p>请尝试其他关键词，或 <a href="products.html" style="color:#2563EB; text-decoration:underline;">查看全部产品</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚占位：由 common.js 动态渲染 -->
+  <div id="footer-placeholder"></div>
+
+  <!-- 产品数据：products 数组、getFeaturedProducts 等工具函数 -->
+  <script src="products-data.js"></script>
+  <!-- 公共 JS：渲染导航栏、页脚、renderProductCard 公共函数 -->
+  <script src="common.js"></script>
+
+  <!-- 本页专属 JS：渲染全部产品卡片 + 搜索过滤 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const grid = document.getElementById("allProductsGrid");
+      const countEl = document.getElementById("productCount");
+      const searchInput = document.getElementById("productSearch");
+      const noResultTip = document.getElementById("noResultTip");
+
+      /**
+       * 渲染产品列表
+       * @param {Array} list 要展示的产品数据数组
+       */
+      function renderList(list) {
+        // 先清空旧内容
+        grid.innerHTML = "";
+
+        // 使用公共渲染函数生成卡片
+        list.forEach(function (product) {
+          grid.innerHTML += renderProductCard(product);
+        });
+
+        // 更新数量显示
+        countEl.textContent = list.length;
+
+        // 控制"无结果"提示的显示/隐藏
+        if (list.length === 0) {
+          noResultTip.style.display = "block";
+        } else {
+          noResultTip.style.display = "none";
+        }
+      }
+
+      /**
+       * 根据关键词过滤产品
+       * 匹配范围：产品名称 + 简短描述 + 详细描述
+       */
+      function filterByKeyword(keyword) {
+        const kw = keyword.trim().toLowerCase();
+        if (!kw) {
+          // 关键词为空：显示全部产品
+          return products;
+        }
+        return products.filter(function (p) {
+          const target = (
+            p.name +
+            " " +
+            p.shortDesc +
+            " " +
+            (p.description || "")
+          ).toLowerCase();
+          return target.indexOf(kw) !== -1;
+        });
+      }
+
+      // 首次加载：渲染全部产品
+      renderList(products);
+
+      // 监听搜索框输入事件（边输入边过滤，实现即时搜索）
+      searchInput.addEventListener("input", function () {
+        const keyword = searchInput.value;
+        const filtered = filterByKeyword(keyword);
+        renderList(filtered);
+      });
+    });
+  </script>
+</body>
+</html>
