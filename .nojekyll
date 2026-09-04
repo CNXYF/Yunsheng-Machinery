@@ -1,0 +1,13 @@
+# This empty file tells GitHub Pages not to run Jekyll on the site.
+# 说明：
+# GitHub Pages 默认会用 Jekyll 对仓库文件进行一次静态站点构建。
+# 但 Jekyll 会忽略所有文件名/目录名以 "_" 开头的资源（如 _assets、_css 等），
+# 导致即使我们把文件放进仓库，在 Pages 上也会 404。
+#
+# 由于本项目是纯原生 HTML/CSS/JS 静态站点，完全不需要 Jekyll，
+# 只需在仓库根目录放一个名为 .nojekyll 的空文件（内容任意），
+# GitHub Pages 就会按普通 HTTP 静态服务器的方式原样托管所有文件，
+# 包括下划线开头的文件/目录。
+#
+# 本项目目前虽然没有以下划线开头的文件/目录，但预先写入 .nojekyll
+# 作为"防御性设置"，未来加 _assets、_pages 等目录时无需再记着补这一步。
