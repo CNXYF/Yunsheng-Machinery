@@ -1,0 +1,62 @@
+{
+  "products": [
+    {
+      "id": "p1",
+      "status": "published",
+      "category": "加工设备",
+      "image": "",
+      "name_zh": "高精度数控加工中心",
+      "name_en": "Precision CNC Machining Center",
+      "summary_zh": "面向复杂零件加工的高刚性、高效率解决方案。",
+      "summary_en": "A rigid, efficient solution for complex part machining.",
+      "specs_zh": "行程、主轴转速及配置可按工件需求定制。",
+      "specs_en": "Travel, spindle speed and configuration can be tailored to your parts."
+    }
+  ],
+  "categories": [
+    {
+      "id": "c1",
+      "status": "published",
+      "name_zh": "加工设备",
+      "name_en": "Machining Equipment"
+    },
+    {
+      "id": "c2",
+      "status": "published",
+      "name_zh": "自动化产线",
+      "name_en": "Automation Lines"
+    }
+  ],
+  "news": [
+    {
+      "id": "n1",
+      "status": "published",
+      "title_zh": "欢迎了解云升机械",
+      "title_en": "Welcome to Yunsheng Machinery",
+      "body_zh": "我们专注于为全球客户提供可靠的机械设备与服务。更多公司动态即将发布。",
+      "body_en": "We provide reliable machinery and service for customers worldwide. Company updates coming soon.",
+      "date": "2026-10-30"
+    }
+  ],
+  "cases": [
+    {
+      "id": "k1",
+      "status": "published",
+      "title_zh": "面向多行业的设备解决方案",
+      "title_en": "Equipment solutions across industries",
+      "body_zh": "根据客户工艺需求配置设备与技术支持。",
+      "body_en": "Equipment and technical support tailored to customer processes."
+    }
+  ],
+  "credentials": [],
+  "settings": {
+    "company_zh": "云升机械",
+    "company_en": "Yunsheng Machinery",
+    "email": "sales@example.com",
+    "phone": "+86 (please update)",
+    "address_zh": "请在管理后台更新公司地址",
+    "address_en": "Update company address in the admin panel"
+  },
+  "inquiries": [],
+  "contacts": []
+}

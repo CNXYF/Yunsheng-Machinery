@@ -1,0 +1,28 @@
+# Render 一键蓝图：Python 服务使用持久磁盘保存网站内容、客户登记和上传媒体。
+services:
+  - type: web
+    name: yunsheng-machinery-api
+    runtime: python
+    plan: starter
+    buildCommand: python -m py_compile server.py
+    startCommand: python server.py
+    healthCheckPath: /api/health
+    autoDeploy: true
+    disk:
+      name: yunsheng-site-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: YUNSHENG_ADMIN
+        value: admin
+      - key: YUNSHENG_PASSWORD
+        sync: false
+      - key: YUNSHENG_DATA_DIR
+        value: /var/data
+      - key: YUNSHENG_UPLOAD_DIR
+        value: /var/data/uploads
+      - key: PUBLIC_API_URL
+        value: https://yunsheng-machinery-api.onrender.com
+      - key: ALLOWED_ORIGINS
+        value: https://cnxyf.github.io
+
