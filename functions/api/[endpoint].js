@@ -57,7 +57,8 @@ function fromBase64Url(value) {
 async function hashPassword(password, saltText) {
   const salt = saltText ? fromBase64Url(saltText) : crypto.getRandomValues(new Uint8Array(16));
   const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
-  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: 120000 }, material, 256);
+  // Pages 免费 CPU 时间有限；40,000 轮兼顾哈希开销，并配合至少 16 位密码。
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: 40000 }, material, 256);
   return { salt: toBase64Url(salt), hash: toBase64Url(bits) };
 }
 
@@ -102,7 +103,7 @@ function validUsername(value) {
 }
 
 function validPassword(value) {
-  return typeof value === "string" && value.length >= 12 && value.length <= 128;
+  return typeof value === "string" && value.length >= 16 && value.length <= 128;
 }
 
 export async function onRequest(context) {
@@ -156,7 +157,7 @@ export async function onRequest(context) {
       if (form.action === "create") {
         const username = String(form.username || "").trim();
         if (!validUsername(username)) return reply({ error: "账号需为 3 至 40 位字母、数字、点、下划线或连字符" }, 400);
-        if (!validPassword(form.password)) return reply({ error: "密码长度需为 12 至 128 个字符" }, 400);
+        if (!validPassword(form.password)) return reply({ error: "密码长度需为 16 至 128 个字符" }, 400);
         const { salt, hash } = await hashPassword(form.password);
         const id = crypto.randomUUID();
         try {
@@ -177,7 +178,7 @@ export async function onRequest(context) {
         if (target.id === currentAdmin.id && !active) return reply({ error: "不能停用当前正在使用的管理员账号" }, 400);
         let result;
         if (form.password) {
-          if (!validPassword(form.password)) return reply({ error: "新密码长度需为 12 至 128 个字符" }, 400);
+          if (!validPassword(form.password)) return reply({ error: "新密码长度需为 16 至 128 个字符" }, 400);
           const { salt, hash } = await hashPassword(form.password);
           result = await env.DB.prepare("UPDATE admin_users SET username = ?, password_salt = ?, password_hash = ?, is_active = ?, token_version = token_version + 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
             .bind(username, salt, hash, active ? 1 : 0, target.id).run();
