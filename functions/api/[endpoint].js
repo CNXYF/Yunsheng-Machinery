@@ -57,7 +57,7 @@ function fromBase64Url(value) {
 async function hashPassword(password, saltText) {
   const salt = saltText ? fromBase64Url(saltText) : crypto.getRandomValues(new Uint8Array(16));
   const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
-  // Pages 免费 CPU 时间有限；40,000 轮兼顾哈希开销，并配合至少 16 位密码。
+  // Pages 免费 CPU 时间有限；40,000 轮兼顾密码哈希安全性与运行开销。
   const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: 40000 }, material, 256);
   return { salt: toBase64Url(salt), hash: toBase64Url(bits) };
 }
@@ -123,11 +123,14 @@ export async function onRequest(context) {
       stage = "read administrator";
       const admin = await env.DB.prepare("SELECT id, username, password_salt, password_hash, role, is_active, token_version, created_at FROM admin_users WHERE username = ? COLLATE NOCASE")
         .bind(username).first();
-      if (!admin || !admin.is_active || typeof form.password !== "string") return reply({ error: "账号或密码错误" }, 401);
+      // 按要求区分账号状态与密码验证结果，便于用户知道登录失败原因。
+      if (!admin) return reply({ error: "账号错误：未找到该管理员账号" }, 401);
+      if (!admin.is_active) return reply({ error: "账号错误：该管理员账号已停用" }, 401);
+      if (typeof form.password !== "string") return reply({ error: "密码错误" }, 401);
       if (admin.id !== bootstrappedAdmin?.id) {
         stage = "verify password";
         const { hash } = await hashPassword(form.password, admin.password_salt);
-        if (!await secureEqual(hash, admin.password_hash)) return reply({ error: "账号或密码错误" }, 401);
+        if (!await secureEqual(hash, admin.password_hash)) return reply({ error: "密码错误" }, 401);
       }
       stage = "sign session";
       const payload = toBase64Url(new TextEncoder().encode(JSON.stringify({ id: admin.id, ver: admin.token_version, exp: Date.now() + 8 * 60 * 60 * 1000 })));
