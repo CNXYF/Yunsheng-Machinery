@@ -66,7 +66,8 @@ async function ensureOwnerAccount(env, form) {
   if (row || !env.ADMIN_PASSWORD) return null;
   const username = String(env.ADMIN_USERNAME || "admin").trim();
   if (String(form.username || "").trim().toLowerCase() !== username.toLowerCase()) return null;
-  if (!await secureEqual(String(form.password || ""), env.ADMIN_PASSWORD)) return null;
+  // 仅在空表首次迁移时校验一次旧密钥；正常登录仍校验密码哈希。
+  if (String(form.password || "") !== env.ADMIN_PASSWORD) return null;
   const { salt, hash } = await hashPassword(env.ADMIN_PASSWORD);
   const id = crypto.randomUUID();
   await env.DB.prepare("INSERT OR IGNORE INTO admin_users (id, username, password_salt, password_hash, role, is_active) VALUES (?, ?, ?, ?, 'owner', 1)")
