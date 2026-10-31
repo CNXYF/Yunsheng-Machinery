@@ -134,7 +134,7 @@ export async function onRequest(context) {
       return reply({ token: `${payload}.${await sign(payload, admin.password_hash)}`, admin: publicAdmin(admin) });
     } catch (error) {
       console.error("管理员登录处理失败", stage, String(error));
-      return reply({ error: "管理员登录处理失败", stage }, 500);
+      return reply({ error: "管理员登录暂时失败，请稍后重试" }, 500);
     }
   }
 
