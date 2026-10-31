@@ -1,0 +1,8 @@
+/* 管理员账号管理：复用后台现有配色，并让账号表单在窄屏下保持可读。 */
+.admin-account-list{display:grid;gap:14px;margin-top:18px}
+.admin-account{padding:16px;background:#eeede8;border:1px solid #d9ddda}
+.admin-account select{width:100%;padding:9px;border:1px solid #cbd0ca;background:#faf9f6;font-size:12px;color:var(--ink)}
+.account-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#68716f;font-size:11px}
+#adminFormMessage{margin-left:12px;color:var(--green);font-size:12px}
+@media(max-width:700px){.account-meta{align-items:flex-start;flex-direction:column}}
+
