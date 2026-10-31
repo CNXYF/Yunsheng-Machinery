@@ -10,7 +10,7 @@ def main():
     if OUT.exists(): shutil.rmtree(OUT)
     OUT.mkdir()
     # Cloudflare Pages 同时发布访客页、管理后台及配置；API 由根目录 functions/ 提供。
-    for name in ("index.html", "admin.html", "style.css", "app.js", "admin.js", ".nojekyll"):
+    for name in ("index.html", "admin.html", "style.css", "admin-accounts.css", "app.js", "admin.js", ".nojekyll"):
         source = ROOT / name
         if source.exists(): shutil.copy2(source, OUT / name)
     content = json.loads(PUBLIC_CONTENT.read_text(encoding="utf-8"))
@@ -23,3 +23,4 @@ def main():
     print(f"Cloudflare Pages 网站已构建：{OUT}")
 
 if __name__ == "__main__": main()
+
