@@ -57,13 +57,17 @@ async function hashPassword(password, saltText) {
   return { salt: toBase64Url(salt), hash: toBase64Url(bits) };
 }
 
-async function ensureOwnerAccount(env) {
+async function ensureOwnerAccount(env, form) {
   const row = await env.DB.prepare("SELECT id FROM admin_users LIMIT 1").first();
-  if (row || !env.ADMIN_PASSWORD) return;
+  if (row || !env.ADMIN_PASSWORD) return null;
   const username = String(env.ADMIN_USERNAME || "admin").trim();
+  if (String(form.username || "").trim().toLowerCase() !== username.toLowerCase()) return null;
+  if (!await secureEqual(String(form.password || ""), env.ADMIN_PASSWORD)) return null;
   const { salt, hash } = await hashPassword(env.ADMIN_PASSWORD);
+  const id = crypto.randomUUID();
   await env.DB.prepare("INSERT OR IGNORE INTO admin_users (id, username, password_salt, password_hash, role, is_active) VALUES (?, ?, ?, ?, 'owner', 1)")
-    .bind(crypto.randomUUID(), username, salt, hash).run();
+    .bind(id, username, salt, hash).run();
+  return findAdminById(env, id);
 }
 
 async function findAdminById(env, id) {
@@ -105,13 +109,15 @@ export async function onRequest(context) {
 
   if (endpoint === "login" && request.method === "POST") {
     const form = await request.json();
-    await ensureOwnerAccount(env);
+    const bootstrappedAdmin = await ensureOwnerAccount(env, form);
     const username = String(form.username || "").trim();
     const admin = await env.DB.prepare("SELECT id, username, password_salt, password_hash, role, is_active, token_version, created_at FROM admin_users WHERE username = ? COLLATE NOCASE")
       .bind(username).first();
     if (!admin || !admin.is_active || typeof form.password !== "string") return reply({ error: "账号或密码错误" }, 401);
-    const { hash } = await hashPassword(form.password, admin.password_salt);
-    if (!await secureEqual(hash, admin.password_hash)) return reply({ error: "账号或密码错误" }, 401);
+    if (admin.id !== bootstrappedAdmin?.id) {
+      const { hash } = await hashPassword(form.password, admin.password_salt);
+      if (!await secureEqual(hash, admin.password_hash)) return reply({ error: "账号或密码错误" }, 401);
+    }
     const payload = toBase64Url(new TextEncoder().encode(JSON.stringify({ id: admin.id, ver: admin.token_version, exp: Date.now() + 8 * 60 * 60 * 1000 })));
     return reply({ token: `${payload}.${await sign(payload, admin.password_hash)}`, admin: publicAdmin(admin) });
   }
