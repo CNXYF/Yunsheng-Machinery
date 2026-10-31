@@ -36,7 +36,11 @@ async function secureEqual(left, right) {
     crypto.subtle.digest("SHA-256", encoder.encode(left)),
     crypto.subtle.digest("SHA-256", encoder.encode(right)),
   ]);
-  return crypto.subtle.timingSafeEqual(leftHash, rightHash);
+  const a = new Uint8Array(leftHash);
+  const b = new Uint8Array(rightHash);
+  let difference = 0;
+  for (let i = 0; i < a.length; i++) difference |= a[i] ^ b[i];
+  return difference === 0;
 }
 
 // 管理员密码用每个账号独立的随机盐和 PBKDF2 哈希保存，不把明文写入 D1。
