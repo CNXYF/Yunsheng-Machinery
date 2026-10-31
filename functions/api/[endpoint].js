@@ -99,11 +99,11 @@ function publicAdmin(admin) {
 }
 
 function validUsername(value) {
-  return /^[A-Za-z0-9_.-]{3,40}$/.test(String(value || "").trim());
+  return /^[A-Za-z0-9]{1,8}$/.test(String(value || "").trim());
 }
 
 function validPassword(value) {
-  return typeof value === "string" && value.length >= 16 && value.length <= 128;
+  return typeof value === "string" && /^[A-Za-z0-9]{8,13}$/.test(value);
 }
 
 export async function onRequest(context) {
@@ -156,8 +156,8 @@ export async function onRequest(context) {
       const form = await request.json();
       if (form.action === "create") {
         const username = String(form.username || "").trim();
-        if (!validUsername(username)) return reply({ error: "账号需为 3 至 40 位字母、数字、点、下划线或连字符" }, 400);
-        if (!validPassword(form.password)) return reply({ error: "密码长度需为 16 至 128 个字符" }, 400);
+        if (!validUsername(username)) return reply({ error: "账号只能使用 1 至 8 位英文字母或数字" }, 400);
+        if (!validPassword(form.password)) return reply({ error: "密码需为 8 至 13 位英文字母或数字" }, 400);
         const { salt, hash } = await hashPassword(form.password);
         const id = crypto.randomUUID();
         try {
@@ -173,12 +173,12 @@ export async function onRequest(context) {
         const target = await findAdminById(env, String(form.id || ""));
         if (!target) return reply({ error: "找不到此管理员账号" }, 404);
         const username = String(form.username || "").trim();
-        if (!validUsername(username)) return reply({ error: "账号需为 3 至 40 位字母、数字、点、下划线或连字符" }, 400);
+        if (!validUsername(username)) return reply({ error: "账号只能使用 1 至 8 位英文字母或数字" }, 400);
         const active = form.is_active === true;
         if (target.id === currentAdmin.id && !active) return reply({ error: "不能停用当前正在使用的管理员账号" }, 400);
         let result;
         if (form.password) {
-          if (!validPassword(form.password)) return reply({ error: "新密码长度需为 16 至 128 个字符" }, 400);
+          if (!validPassword(form.password)) return reply({ error: "新密码需为 8 至 13 位英文字母或数字" }, 400);
           const { salt, hash } = await hashPassword(form.password);
           result = await env.DB.prepare("UPDATE admin_users SET username = ?, password_salt = ?, password_hash = ?, is_active = ?, token_version = token_version + 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
             .bind(username, salt, hash, active ? 1 : 0, target.id).run();
