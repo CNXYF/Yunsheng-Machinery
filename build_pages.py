@@ -9,8 +9,8 @@ PUBLIC_CONTENT = ROOT / "content.public.json"
 def main():
     if OUT.exists(): shutil.rmtree(OUT)
     OUT.mkdir()
-    # Pages 只部署静态访客页面。Python 管理后台需运行在支持后端的服务器。
-    for name in ("index.html", "style.css", "app.js", ".nojekyll"):
+    # Cloudflare Pages 同时发布访客页、管理后台及配置；API 由根目录 functions/ 提供。
+    for name in ("index.html", "admin.html", "style.css", "app.js", "admin.js", ".nojekyll"):
         source = ROOT / name
         if source.exists(): shutil.copy2(source, OUT / name)
     content = json.loads(PUBLIC_CONTENT.read_text(encoding="utf-8"))
@@ -18,12 +18,8 @@ def main():
     content["contacts"] = []
     content["inquiries"] = []
     (OUT / "content.public.json").write_text(json.dumps(content, ensure_ascii=False, indent=2), encoding="utf-8")
-    # API 地址通过 GitHub Actions 变量配置，避免把任何密钥写进前端文件。
-    api_base=os.environ.get("SITE_API_URL", "https://yunsheng-machinery-api.onrender.com").rstrip("/")
-    (OUT / "config.js").write_text("window.YS_API_BASE = "+json.dumps(api_base)+";\n", encoding="utf-8")
-    uploads = ROOT / "uploads"
-    if uploads.exists(): shutil.copytree(uploads, OUT / "uploads", dirs_exist_ok=True)
-    print(f"GitHub Pages 静态网站已构建：{OUT}")
+    # 前后端同域部署，API_BASE 留空；密钥仅放 Cloudflare Pages 环境变量。
+    (OUT / "config.js").write_text("window.YS_API_BASE = '';\n", encoding="utf-8")
+    print(f"Cloudflare Pages 网站已构建：{OUT}")
 
 if __name__ == "__main__": main()
-
