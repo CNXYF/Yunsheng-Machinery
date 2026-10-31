@@ -113,18 +113,28 @@ export async function onRequest(context) {
   if (endpoint === "session" && request.method === "GET") return reply({ ok: !!await getAdmin(request, env) });
 
   if (endpoint === "login" && request.method === "POST") {
-    const form = await request.json();
-    const bootstrappedAdmin = await ensureOwnerAccount(env, form);
-    const username = String(form.username || "").trim();
-    const admin = await env.DB.prepare("SELECT id, username, password_salt, password_hash, role, is_active, token_version, created_at FROM admin_users WHERE username = ? COLLATE NOCASE")
-      .bind(username).first();
-    if (!admin || !admin.is_active || typeof form.password !== "string") return reply({ error: "账号或密码错误" }, 401);
-    if (admin.id !== bootstrappedAdmin?.id) {
-      const { hash } = await hashPassword(form.password, admin.password_salt);
-      if (!await secureEqual(hash, admin.password_hash)) return reply({ error: "账号或密码错误" }, 401);
+    let stage = "read request";
+    try {
+      const form = await request.json();
+      stage = "bootstrap owner";
+      const bootstrappedAdmin = await ensureOwnerAccount(env, form);
+      const username = String(form.username || "").trim();
+      stage = "read administrator";
+      const admin = await env.DB.prepare("SELECT id, username, password_salt, password_hash, role, is_active, token_version, created_at FROM admin_users WHERE username = ? COLLATE NOCASE")
+        .bind(username).first();
+      if (!admin || !admin.is_active || typeof form.password !== "string") return reply({ error: "账号或密码错误" }, 401);
+      if (admin.id !== bootstrappedAdmin?.id) {
+        stage = "verify password";
+        const { hash } = await hashPassword(form.password, admin.password_salt);
+        if (!await secureEqual(hash, admin.password_hash)) return reply({ error: "账号或密码错误" }, 401);
+      }
+      stage = "sign session";
+      const payload = toBase64Url(new TextEncoder().encode(JSON.stringify({ id: admin.id, ver: admin.token_version, exp: Date.now() + 8 * 60 * 60 * 1000 })));
+      return reply({ token: `${payload}.${await sign(payload, admin.password_hash)}`, admin: publicAdmin(admin) });
+    } catch (error) {
+      console.error("管理员登录处理失败", stage, String(error));
+      return reply({ error: "管理员登录处理失败", stage }, 500);
     }
-    const payload = toBase64Url(new TextEncoder().encode(JSON.stringify({ id: admin.id, ver: admin.token_version, exp: Date.now() + 8 * 60 * 60 * 1000 })));
-    return reply({ token: `${payload}.${await sign(payload, admin.password_hash)}`, admin: publicAdmin(admin) });
   }
 
   if (endpoint === "me" && request.method === "GET") {
