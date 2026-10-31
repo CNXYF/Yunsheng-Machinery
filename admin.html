@@ -17,7 +17,7 @@
       <span class="eyebrow">YUNSHENG CMS</span><h1>管理员登录</h1>
       <p>登录后即可修改网站内容、产品及查看询盘。</p>
       <form id="loginForm">
-        <label>管理员账号<input name="username" required autocomplete="username" placeholder="请输入管理员账号"></label>
+        <label>管理员账号<input name="username" required maxlength="8" pattern="[A-Za-z0-9]+" autocomplete="username" placeholder="1 至 8 位英文字母或数字"></label>
         <label>管理员密码<input name="password" type="password" required autocomplete="current-password"></label>
         <button class="button primary">登录后台 ↗</button><p id="loginError" role="status"></p>
       </form>
