@@ -1,6 +1,6 @@
 # 云升机械网站：全部迁移到 Cloudflare
 
-此版本将静态前台、管理后台、API、D1 数据库和 R2 媒体文件放在 Cloudflare Pages 项目中。Cloudflare Pages Functions 路由代码位于 `functions/`，数据结构位于 `schema.sql`，绑定配置位于 `wrangler.toml`。原有 `server.py` 保留作为本地/迁移参考，不再是 Cloudflare 线上运行入口。
+此版本将静态前台、管理后台、API、D1 数据库和 R2 媒体文件放在 Cloudflare Pages 项目中。Cloudflare Pages Functions 路由代码位于 `functions/`，数据结构位于 `schema.sql`。D1、R2 和管理员密钥通过 Cloudflare Pages 控制台设置。原有 `server.py` 保留作为本地/迁移参考，不再是 Cloudflare 线上运行入口。
 
 ## 一、创建 Cloudflare 资源
 
@@ -15,8 +15,8 @@
 
 ## 二、绑定配置注意事项
 
-- `wrangler.toml` 的 `database_id` 是占位文字。使用 Wrangler 部署时必须替换成真实 D1 ID；若只用 Pages 控制台配置绑定，可将占位配置替换为真实 ID以免配置校验失败。
-- Pages Functions 的绑定名称大小写必须完全匹配 `DB`、`MEDIA`。
+- 本项目不提交带有占位 UUID 的 Wrangler 配置；请在 Pages 控制台绑定实际创建的 D1 数据库和 R2 桶。绑定名称大小写必须完全匹配 `DB`、`MEDIA`。
+- Pages 项目构建设置为 `python build_pages.py`，输出目录为 `_site`。部署配置和资源绑定以 Cloudflare 控制台为准。
 - 发布前核实 GitHub Actions 的旧 GitHub Pages workflow 已关闭，避免两种平台的流水线同时发布造成误解。Cloudflare Pages 自身连接 GitHub 后会自动构建。
 - Pages API 使用同域相对路径，不需要配置外部 Python API 地址。
 
@@ -33,7 +33,7 @@
 - `functions/api/[endpoint].js`：登录、内容读取保存、询盘、联系登记、媒体上传接口。
 - `functions/media/[key].js`：从私有 R2 绑定读取媒体对象。
 - `schema.sql`：D1 建表语句；新增结构后通过版本化 SQL 迁移。
-- `wrangler.toml`：Cloudflare Pages、D1、R2 配置示例。
+- Cloudflare Pages 控制台：管理构建设置、D1/R2 绑定、管理员变量和密钥。
 - `build_pages.py`：将前台与后台页面复制到 `_site`，剔除客户线索并生成同域 API 配置。
 - `app.js`、`admin.js`：前端页面和后台交互，后端地址默认同域，无需手工调整。
 
@@ -46,3 +46,4 @@
 - 维护前先在 Pages 创建预览部署，并备份 D1 数据及 R2 对象。
 
 此迁移需要在 Cloudflare 控制台创建资源、填写密钥并关联 Git 仓库。代码已准备同域 Pages Functions 方案；实际生产部署需完成上述账户配置后才会启用完整动态功能。
+
